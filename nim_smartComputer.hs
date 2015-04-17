@@ -9,10 +9,7 @@ showSticks n = concat ["X" | r <- [0..n-1] ]
 
 --prompUser =
 
-play board = do
-	putStrLn (showBoard board)
-	move board humanPlay
-	move board compPlayer
+
 
 --for tuple use
 fst3 (a,_,_) = a
@@ -58,6 +55,11 @@ validSticks board row
 	| row == 2 = "1-" ++ (show (snd3 board))
 	| row == 3 = "1-" ++ (show (thrd3 board))
 	| otherwise = "error"
+
+play board = do
+	putStrLn (showBoard board)
+	move board humanPlay
+	move board compPlayer
 --code for humanPlay
 --returns list of valid rows
 --validRows board = []
