@@ -1,7 +1,10 @@
 module Nim where
 
-showBoard = "Row 1: " ++ "temp" ++ "\n" ++
-	"Row 2: " ++ "temp" ++ "\n" ++
-	"Row 3: " ++ "temp" ++ "\n"
+showBoard row1 row2 row3 = "Row 1: " ++ (showSticks row1) ++ "\n" ++
+	"Row 2: " ++ (showSticks row2) ++ "\n" ++
+	"Row 3: " ++ (showSticks row3) ++ "\n"
 
-main = putStrLn showBoard
+--show 'X' n times
+showSticks n = concat ["X" | r <- [0..n-1] ] 
+
+main = putStrLn (showBoard 4 3 7)
