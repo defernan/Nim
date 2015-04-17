@@ -1,6 +1,15 @@
 module NimSmart where
 
---DISPLY BOARD
+import Numeric
+import Data.Char
+{-
+-
+-
+-----------------------BOARD---------------------------------
+-
+-
+-}
+--DISPLAY BOARD
 showBoard board = "Row 1: " ++ (showSticks (fst3 board)) ++ "\n" ++
 	"Row 2: " ++ (showSticks (snd3 board)) ++ "\n" ++
 	"Row 3: " ++ (showSticks (thrd3 board)) ++ "\n"
@@ -18,12 +27,38 @@ thrd3 (_,_,c) = c
 --move second param = player
 move board player = player board
 
-
+{-
+-
+-
+-----------------COMPUTER PLAYER-------------------
+-
+-
+-}
 
 compPlayer board = do
 	putStrLn "5"
---remove sticks
 
+
+--HELPER 
+--convert board to binary
+boardToBinary:: (Show t1, Show t, Show a, Integral t1, Integral t, Integral a) => (t, t1, a) -> ([Char], [Char], [Char])
+boardToBinary board = (intToBinary (fst3 board), intToBinary (snd3 board), intToBinary (thrd3 board))
+
+intToBinary :: (Show a, Integral a) => a -> [Char]
+intToBinary n
+	| n < 4 = "0" ++ (showIntAtBase 2 intToDigit n "")
+	| n < 2 = "00" ++ (showIntAtBase 2 intToDigit n "")
+	| otherwise = (showIntAtBase 2 intToDigit n "")
+
+--get kernal state
+{-
+-
+-
+----------------HUMAN PLLAYER--------------------
+-
+-
+-}
+--HELPER FUNCTIONS
 --ROW SELECT
 --logic for row select
 isValidRow board num 
@@ -71,29 +106,21 @@ getSticks board row= do
 		else do
 			putStrLn "\nInvalid Stick Number"
 			getSticks board row
-			
 
-
---code for humanPlay
---returns list of valid rows
---validRows board = []
 {-
-isValid num =
-
-
-
---returns list of valid sticks to take from row
-validSticks row =
-
-
-humanMove = do
-	showBoard 4 3 7
+-
+-
+-
+----------------------------GAME PLAY-----------------------------
+-
+-
 -}
 
 makeMove board row sticks
 	| row == 1 = ((fst3 board) - sticks, snd3 board, thrd3 board)
 	| row == 2 = (fst3 board, (snd3 board) - sticks, thrd3 board)
 	| row == 3 = (fst3 board, snd3 board, (thrd3 board) - sticks)
+
 --play
 play board= do
 	putStr (showBoard board)
