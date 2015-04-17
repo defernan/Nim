@@ -66,16 +66,20 @@ getKerneldig :: Int -> ([Char], [Char], [Char]) -> Int
 getKerneldig num binBoard = mod ((digitToInt $ (fst3 binBoard) !! num) + (digitToInt $ (snd3 binBoard) !! num) + (digitToInt $ (thrd3 binBoard) !! num)) 2
 
 --LOGIC FOR ROW TO MAKE MOVE 
-
+getRowToChange :: Num a => Int -> ([Char], [Char], [Char]) -> a
 getRowToChange kernelOneLocation binArray 
 	| ((fst3 binArray) !! kernelOneLocation) == '1' = 1
 	| ((snd3 binArray) !! kernelOneLocation) == '1' = 2
 	| ((thrd3 binArray) !! kernelOneLocation) == '1' = 3
 
+getLeftMostOneInKernelState :: Num a => [Char] -> a
 getLeftMostOneInKernelState kernelState 
 	| (kernelState !! 0) == '1' = 0
 	| (kernelState !! 1) == '1' = 1
 	| (kernelState !! 2) == '1' = 2
+
+--LOGIC FOR XORING DESIRED ROW
+--xor_row kernelState binArray =
 {-
 -
 -
