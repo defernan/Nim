@@ -7,4 +7,14 @@ showBoard row1 row2 row3 = "Row 1: " ++ (showSticks row1) ++ "\n" ++
 --show 'X' n times
 showSticks n = concat ["X" | r <- [0..n-1] ] 
 
+--prompUser =
+
+--play board =
+
+--code for humanPlay
+{-
+humanPlay = do
+	showBoard 4 3 7
+-}
+
 main = putStrLn (showBoard 4 3 7)
