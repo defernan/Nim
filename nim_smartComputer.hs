@@ -1,4 +1,4 @@
-module Nim where
+module NimSmart where
 
 showBoard board = "Row 1: " ++ (showSticks (fst3 board)) ++ "\n" ++
 	"Row 2: " ++ (showSticks (snd3 board)) ++ "\n" ++
