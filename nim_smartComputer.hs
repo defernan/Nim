@@ -19,20 +19,11 @@ thrd3 (_,_,c) = c
 --move second param = player
 move board player = player board
 
-humanPlay board= do
-	putStr "Enter one of the following row numbers: "
-	putStrLn(show (validRows board))
-	row <- getLine
-	if (isValidRow board (read row))
-		then do
-			putStr "Select number of sticks to remove:"
-			putStrLn (validSticks board (read row))
-		else do 
-			putStrLn "Invalid row number"
-			humanPlay board
+
 
 compPlayer board = do
 	putStrLn "5"
+--remove sticks
 
 --logic for row select
 isValidRow board num 
@@ -42,6 +33,18 @@ isValidRow board num
 	| otherwise = False
 
 validRows board = [x | x <- [1..3], (isValidRow board x)]
+
+getRow board= do 
+	putStr "Enter one of the following row numbers: "
+	putStrLn(show (validRows board))
+	row <- getLine
+	if (isValidRow board (read row))
+		then do 
+			return row
+		else do
+			putStrLn "\nInvalid Row Number"
+			getRow board
+
 
 --logic for stick select
 isValidSticks board row num 
@@ -56,10 +59,19 @@ validSticks board row
 	| row == 3 = "1-" ++ (show (thrd3 board))
 	| otherwise = "error"
 
-play board = do
-	putStrLn (showBoard board)
-	move board humanPlay
-	move board compPlayer
+getSticks board row= do 
+	putStr "Select number of sticks to remove:"
+	putStrLn (validSticks board row)
+	sticks <- getLine
+	if (isValidSticks board row (read sticks))
+		then do 
+			return sticks
+		else do
+			putStrLn "\nInvalid Stick Number"
+			getSticks board row
+			
+
+
 --code for humanPlay
 --returns list of valid rows
 --validRows board = []
@@ -75,6 +87,15 @@ validSticks row =
 humanMove = do
 	showBoard 4 3 7
 -}
+--play
+play board= do
+	putStr (showBoard board)
+	row <- getRow board
+	sticks <- getSticks board (read row)
+	putStrLn "TEMP"
+	play board
+
+
 
 
 main = do
