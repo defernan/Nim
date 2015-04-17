@@ -1,5 +1,6 @@
 module NimSmart where
 
+--DISPLY BOARD
 showBoard board = "Row 1: " ++ (showSticks (fst3 board)) ++ "\n" ++
 	"Row 2: " ++ (showSticks (snd3 board)) ++ "\n" ++
 	"Row 3: " ++ (showSticks (thrd3 board)) ++ "\n"
@@ -7,10 +8,8 @@ showBoard board = "Row 1: " ++ (showSticks (fst3 board)) ++ "\n" ++
 --show 'X' n times
 showSticks n = concat ["X" | r <- [0..n-1] ] 
 
---prompUser =
 
-
-
+--RETRIEVING BOARD VALUES
 --for tuple use
 fst3 (a,_,_) = a
 snd3 (_,b,_) = b
@@ -25,6 +24,7 @@ compPlayer board = do
 	putStrLn "5"
 --remove sticks
 
+--ROW SELECT
 --logic for row select
 isValidRow board num 
 	| num == 1 && fst3 board > 0 = True
@@ -34,6 +34,7 @@ isValidRow board num
 
 validRows board = [x | x <- [1..3], (isValidRow board x)]
 
+--only returns when valid selection has been made
 getRow board= do 
 	putStr "Enter one of the following row numbers: "
 	putStrLn(show (validRows board))
@@ -45,7 +46,7 @@ getRow board= do
 			putStrLn "\nInvalid Row Number"
 			getRow board
 
-
+--STICK SELECT
 --logic for stick select
 isValidSticks board row num 
 	| row == 1 && num > 0 && num <= fst3 board = True
@@ -59,6 +60,7 @@ validSticks board row
 	| row == 3 = "1-" ++ (show (thrd3 board))
 	| otherwise = "error"
 
+--only returns when valid selection has been made
 getSticks board row= do 
 	putStr "Select number of sticks to remove:"
 	putStrLn (validSticks board row)
@@ -87,13 +89,18 @@ validSticks row =
 humanMove = do
 	showBoard 4 3 7
 -}
+
+makeMove board row sticks
+	| row == 1 = ((fst3 board) - sticks, snd3 board, thrd3 board)
+	| row == 2 = (fst3 board, (snd3 board) - sticks, thrd3 board)
+	| row == 3 = (fst3 board, snd3 board, (thrd3 board) - sticks)
 --play
 play board= do
 	putStr (showBoard board)
 	row <- getRow board
 	sticks <- getSticks board (read row)
 	putStrLn "TEMP"
-	play board
+	play (makeMove board (read row) (read sticks))
 
 
 
