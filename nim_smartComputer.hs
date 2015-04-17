@@ -39,7 +39,9 @@ compPlayer board = do
 	putStrLn "5"
 
 
---HELPER 
+--HELPERS
+
+--LOGIC FOR BOARD TO BINARY
 --convert board to binary
 boardToBinary:: (Show t1, Show t, Show a, Integral t1, Integral t, Integral a) => (t, t1, a) -> ([Char], [Char], [Char])
 boardToBinary board = (intToBinary (fst3 board), intToBinary (snd3 board), intToBinary (thrd3 board))
@@ -50,7 +52,30 @@ intToBinary n
 	| n < 2 = "00" ++ (showIntAtBase 2 intToDigit n "")
 	| otherwise = (showIntAtBase 2 intToDigit n "")
 
---get kernal state
+--LOGIC FOR CURRENT BOARD STATE
+--get kernel 
+getKernelState :: ([Char], [Char], [Char]) -> [Char]
+getKernelState binBoard = a ++ b ++ c
+	where
+		a = show $ getKerneldig 0 binBoard
+		b = show $ getKerneldig 1 binBoard
+		c = show $ getKerneldig 2 binBoard
+
+--helper for kernel state
+getKerneldig :: Int -> ([Char], [Char], [Char]) -> Int
+getKerneldig num binBoard = mod ((digitToInt $ (fst3 binBoard) !! num) + (digitToInt $ (snd3 binBoard) !! num) + (digitToInt $ (thrd3 binBoard) !! num)) 2
+
+--LOGIC FOR ROW TO MAKE MOVE 
+
+getRowToChange kernelOneLocation binArray 
+	| ((fst3 binArray) !! kernelOneLocation) == '1' = 1
+	| ((snd3 binArray) !! kernelOneLocation) == '1' = 2
+	| ((thrd3 binArray) !! kernelOneLocation) == '1' = 3
+
+getLeftMostOneInKernelState kernelState 
+	| (kernelState !! 0) == '1' = 0
+	| (kernelState !! 1) == '1' = 1
+	| (kernelState !! 2) == '1' = 2
 {-
 -
 -
