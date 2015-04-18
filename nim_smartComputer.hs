@@ -35,9 +35,17 @@ move board player = player board
 -
 -}
 
-compPlayer board = do
-	putStrLn "5"
-
+compPlayerMove board
+	| row == 1 = (val, snd3 board, thrd3 board)
+	| row == 2 = (fst3 board, val, thrd3 board)
+	| row == 3 = (fst3 board, snd3 board, val)
+	| otherwise = board
+	where	
+		binBoard = boardToBinary board
+		kernelState = getKernelState binBoard
+		row = getRowToChange (getLeftMostOneInKernelState kernelState) binBoard
+		val = binToInt (xor_row kernelState binBoard row)
+		
 
 --HELPERS
 
@@ -71,15 +79,35 @@ getRowToChange kernelOneLocation binArray
 	| ((fst3 binArray) !! kernelOneLocation) == '1' = 1
 	| ((snd3 binArray) !! kernelOneLocation) == '1' = 2
 	| ((thrd3 binArray) !! kernelOneLocation) == '1' = 3
+	| otherwise = 4
 
 getLeftMostOneInKernelState :: Num a => [Char] -> a
 getLeftMostOneInKernelState kernelState 
 	| (kernelState !! 0) == '1' = 0
 	| (kernelState !! 1) == '1' = 1
 	| (kernelState !! 2) == '1' = 2
+	| otherwise = 4
 
 --LOGIC FOR XORING DESIRED ROW
---xor_row kernelState binArray =
+xor_row kernelState binArray row
+	| row == 1 = xor_line (fst3 binArray) kernelState
+	| row == 2 = xor_line (snd3 binArray) kernelState
+	| row == 3 = xor_line (thrd3 binArray) kernelState
+	| otherwise = "error"
+
+xor_line line kernelState = a ++ b ++ c
+	where
+		a = xor (line !! 0) (kernelState !! 0)
+		b = xor (line !! 1) (kernelState !! 1)
+		c = xor (line !! 2) (kernelState !! 2)
+
+xor a b 
+	| a == b = "0"
+	| otherwise = "1"
+
+--LOGIC FOR CONVERTING LINE BACK TO INTGER
+binToInt bin = 4*(digitToInt (bin !! 0)) + 2*(digitToInt (bin !! 1)) + (digitToInt (bin !! 2))
+
 {-
 -
 -
@@ -156,7 +184,8 @@ play board= do
 	row <- getRow board
 	sticks <- getSticks board (read row)
 	putStrLn "TEMP"
-	play (makeMove board (read row) (read sticks))
+	let b = (makeMove board (read row) (read sticks))
+	play b
 
 
 
