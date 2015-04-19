@@ -208,6 +208,7 @@ play board= do
 	if (checkWin board1)
 		then do
 			putStrLn "Human won!"
+			putStrLn (showBoard board1)
 		else do
 			let board2 = compPlayerMove board1
 			putStrLn "Computer's Move"
