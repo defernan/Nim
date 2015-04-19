@@ -56,8 +56,8 @@ boardToBinary board = (intToBinary (fst3 board), intToBinary (snd3 board), intTo
 
 intToBinary :: (Show a, Integral a) => a -> [Char]
 intToBinary n
-	| n < 4 = "0" ++ (showIntAtBase 2 intToDigit n "")
 	| n < 2 = "00" ++ (showIntAtBase 2 intToDigit n "")
+	| n < 4 = "0" ++ (showIntAtBase 2 intToDigit n "")
 	| otherwise = (showIntAtBase 2 intToDigit n "")
 
 --LOGIC FOR CURRENT BOARD STATE
