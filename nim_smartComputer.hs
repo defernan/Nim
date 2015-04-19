@@ -86,7 +86,7 @@ getLeftMostOneInKernelState kernelState
 	| (kernelState !! 0) == '1' = 0
 	| (kernelState !! 1) == '1' = 1
 	| (kernelState !! 2) == '1' = 2
-	| otherwise = 4
+	| otherwise = 0
 
 --LOGIC FOR XORING DESIRED ROW
 xor_row kernelState binArray row
@@ -185,7 +185,7 @@ play board= do
 	sticks <- getSticks board (read row)
 	putStrLn "TEMP"
 	let b = (makeMove board (read row) (read sticks))
-	play b
+	play (compPlayerMove b)
 
 
 
