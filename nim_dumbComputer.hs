@@ -40,15 +40,10 @@ thrd3 (_,_,c) = c
 -}
 compPlayerMove :: (Int, Int, Int) -> (Int, Int, Int)
 compPlayerMove board
-	| row == 1 = (val, snd3 board, thrd3 board)
-	| row == 2 = (fst3 board, val, thrd3 board)
-	| row == 3 = (fst3 board, snd3 board, val)
+	| fst3 board > 0 = (0, snd3 board, thrd3 board)
+	| snd3 board > 0 = (fst3 board, 0, thrd3 board)
+	| thrd3 board > 0 = (fst3 board, snd3 board, 0)
 	| otherwise = board
-	where	
-		binBoard = boardToBinary board
-		kernelState = getKernelState binBoard
-		row = getRowToChange (getLeftMostOneInKernelState kernelState) binBoard
-		val = binToInt (xor_row kernelState binBoard row)
 		
 
 --HELPERS

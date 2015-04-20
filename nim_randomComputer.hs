@@ -2,6 +2,7 @@ module NimRandom where
 
 import Numeric
 import Data.Char
+import System.Random
 {-
 -
 -
@@ -38,19 +39,36 @@ thrd3 (_,_,c) = c
 -
 -
 -}
-compPlayerMove :: (Int, Int, Int) -> (Int, Int, Int)
-compPlayerMove board
-	| row == 1 = (val, snd3 board, thrd3 board)
-	| row == 2 = (fst3 board, val, thrd3 board)
-	| row == 3 = (fst3 board, snd3 board, val)
-	| otherwise = board
-	where	
-		binBoard = boardToBinary board
-		kernelState = getKernelState binBoard
-		row = getRowToChange (getLeftMostOneInKernelState kernelState) binBoard
-		val = binToInt (xor_row kernelState binBoard row)
-		
+compPlayerMove :: (Int, Int, Int) -> StdGen -> ((Int, Int, Int), StdGen)
+compPlayerMove board gen
+	| row == 1 && isValidRow board row = (((fst3 board) - numSticks, snd3 board, thrd3 board),gen'')
+	| row == 2 && isValidRow board row = ((fst3 board, (snd3 board) - numSticks, thrd3 board),gen'')
+	| row == 3 && isValidRow board row = ((fst3 board, snd3 board, (thrd3 board - numSticks)),gen'')	
+	| otherwise = compPlayerMove board gen''
+	where
+		rowGen = getRandomRow gen
+		row = fst rowGen
+		gen' = snd rowGen
+		maxSticks = getSticksInRow board row
+		sticks = getRandomSticks maxSticks gen'
+		numSticks = fst sticks
+		gen'' = snd sticks
 
+getSticksInRow::(Int, Int, Int) -> Int -> Int
+getSticksInRow board row
+	|row == 1 = fst3 board
+	|row == 2 = snd3 board
+	|row == 3 = thrd3 board
+		
+getRandomRow::StdGen -> (Int, StdGen)
+getRandomRow gen = randomR (1,3) gen
+
+getRandomSticks::Int -> StdGen -> (Int, StdGen)
+getRandomSticks maxSticks gen = randomR (1, maxSticks) gen
+	
+	
+--getRandomSticks::Int -> Int
+--getRandomSticks maxSticks = 
 --HELPERS
 
 --LOGIC FOR BOARD TO BINARY
@@ -198,8 +216,8 @@ makeMove board row sticks
 	| row == 3 = (fst3 board, snd3 board, (thrd3 board) - sticks)
 
 --play
-play :: (Int, Int, Int) -> IO ()
-play board= do
+play :: (Int, Int, Int)->StdGen -> IO ()
+play board gen= do
 	putStrLn "Human's Move"
 	putStr (showBoard board)
 	row <- getRow board
@@ -210,7 +228,8 @@ play board= do
 			putStrLn "Human won!"
 			putStrLn (showBoard board1)
 		else do
-			let board2 = compPlayerMove board1
+			let (board2, gen') = compPlayerMove board1 gen
+			print gen'
 			putStrLn "Computer's Move"
 			putStrLn (showBoard board1)
 			if (checkWin board2)
@@ -218,11 +237,16 @@ play board= do
 					putStrLn "Computer won!"
 					putStrLn (showBoard board2)
 				else do
-					play (board2)
+					play (board2) gen'
 
 
+createInitRandom::StdGen -> StdGen
+createInitRandom gen = snd $ (randomR (1,100000) gen :: (Int, StdGen))
 
 main :: IO ()
 main = do
+	gen <- newStdGen
 	putStrLn "NIM!"
-	play (4,3,7)
+	let sGen = createInitRandom gen
+	print sGen
+	play (4,3,7) sGen
